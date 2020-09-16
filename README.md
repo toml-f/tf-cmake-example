@@ -30,3 +30,23 @@ Now you can add `toml-f-lib` to your dependencies and access the public API by t
 
 We recommend to disable building `toml-f` as shared library and just link your applications or library statically against it.
 The `toml-f` subproject will decide based on the library type if it should install itself along with your project.
+
+Alternatively, the CMake module [`DownloadProject`](https://github.com/Crascit/DownloadProject) can be used to download and include `toml-f`, it is distributed for convenience together with this example project.
+To automatically download and include `toml-f` use
+
+```cmake
+# subprojects/CMakeLists.txt
+set(BUILD_SHARED_LIBS OFF)
+include(DownloadProject)
+download_project(
+  PROJ "toml-f"
+  GIT_REPOSITORY "http://github.com/toml-f/toml-f"
+  GIT_TAG "HEAD"
+)
+add_subdirectory("${toml-f_SOURCE_DIR}" "${toml-f_BINARY_DIR}")
+list(
+  APPEND lib-deps
+  "toml-f-lib"
+)
+set(lib-deps "${lib-deps}" PARENT_SCOPE)
+```

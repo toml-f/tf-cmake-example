@@ -1,11 +1,19 @@
-get_directory_property(toml-f-found "toml-f")
-if(NOT toml-f-found)
-  message(SEND_ERROR "Initialize toml-f with:\ngit submodule add https://github.com/toml-f/toml-f subprojects/toml-f")
-endif()
-
 # Configuration options for TOML-Fortran dependency
 set(BUILD_SHARED_LIBS OFF)
-add_subdirectory("toml-f")
+
+# Include the toml-f project
+get_directory_property(toml-f-found "toml-f")
+if(toml-f-found)
+  add_subdirectory("toml-f")
+else()
+  include(DownloadProject)
+  download_project(
+    PROJ "toml-f"
+    GIT_REPOSITORY "https://github.com/toml-f/toml-f"
+    GIT_TAG "HEAD"
+  )
+  add_subdirectory("${toml-f_SOURCE_DIR}" "${toml-f_BINARY_DIR}")
+endif()
 list(
   APPEND lib-deps
   "toml-f-lib"

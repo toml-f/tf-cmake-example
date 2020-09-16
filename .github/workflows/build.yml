@@ -1,0 +1,40 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  linux-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - run: sudo apt install -yq --no-install-recommends gfortran
+    - run: pip3 install cmake ninja
+    - run: cmake -S. -Bbuild_gcc -GNinja -DCMAKE_INSTALL_PREFIX=$PWD/_dist
+    - run: cmake --build build_gcc
+    - run: cmake --install build_gcc
+
+  osx-build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - run: brew install gcc ninja cmake
+    - run: cmake -S. -Bbuild_gcc -GNinja -DCMAKE_INSTALL_PREFIX=$PWD/_dist
+    - run: cmake --build build_gcc
+    - run: cmake --install build_gcc
+
+#  win-build:
+#    runs-on: windows-latest
+#    steps:
+#    - uses: actions/checkout@v2
+#    - uses: actions/setup-python@v1
+#      with:
+#        python-version: '3.x'
+#    - run: pip3 install cmake ninja
+#    - run: cmake -S. -Bbuild_gcc -GNinja -DCMAKE_INSTALL_PREFIX=$(get-location)\_dist
+#    - run: cmake --build build_gcc
+#    - run: cmake --install build_gcc
