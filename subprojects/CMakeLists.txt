@@ -6,11 +6,14 @@ get_directory_property(toml-f-found "toml-f")
 if(toml-f-found)
   add_subdirectory("toml-f")
 else()
+  set(toml-f-url "https://github.com/toml-f/toml-f")
+  message(STATUS "Retrieving TOML-Fortran from ${toml-f-url}")
   include(DownloadProject)
   download_project(
     PROJ "toml-f"
-    GIT_REPOSITORY "https://github.com/toml-f/toml-f"
+    GIT_REPOSITORY "${toml-f-url}"
     GIT_TAG "HEAD"
+    QUIET
   )
   add_subdirectory("${toml-f_SOURCE_DIR}" "${toml-f_BINARY_DIR}")
 endif()
