@@ -2,21 +2,19 @@
 set(BUILD_SHARED_LIBS OFF)
 
 # Include the toml-f project
-get_directory_property(toml-f-found "toml-f")
-if(toml-f-found)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/toml-f/CMakeLists.txt)
   add_subdirectory("toml-f")
 else()
   set(toml-f-url "https://github.com/toml-f/toml-f")
   message(STATUS "Retrieving TOML-Fortran from ${toml-f-url}")
-  include(DownloadProject)
-  download_project(
-    PROJ "toml-f"
+  include(FetchContent)
+  FetchContent_Declare(toml-f
     GIT_REPOSITORY "${toml-f-url}"
     GIT_TAG "HEAD"
-    QUIET
   )
-  add_subdirectory("${toml-f_SOURCE_DIR}" "${toml-f_BINARY_DIR}")
+  FetchContent_MakeAvailable(toml-f)
 endif()
+
 list(
   APPEND lib-deps
   "toml-f-lib"
